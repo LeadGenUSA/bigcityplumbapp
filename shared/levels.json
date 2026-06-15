@@ -1,0 +1,225 @@
+{
+  "version": 1,
+  "_notes": "Each level: cols/rows is the grid; entry_col/exit_col anchor the funnels at the top and bottom rows; tiles[] lists every pipe the player can rotate. Empty cells are walls — ball can't pass through. Shape rotations 0..3 step 90° clockwise. Base connections: straight=LEFT+RIGHT; elbow=RIGHT+BOTTOM; tee=LEFT+RIGHT+BOTTOM.",
+  "levels": [
+    {
+      "id": 1, "name": "First Drop",
+      "cols": 3, "rows": 4,
+      "entry_col": 1, "exit_col": 1,
+      "tiles": [
+        { "x": 1, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 2, "shape": "straight", "rot": 0 }
+      ]
+    },
+    {
+      "id": 2, "name": "Sidestep",
+      "cols": 4, "rows": 5,
+      "entry_col": 1, "exit_col": 2,
+      "tiles": [
+        { "x": 1, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 2, "shape": "elbow",    "rot": 0 },
+        { "x": 2, "y": 2, "shape": "elbow",    "rot": 0 },
+        { "x": 2, "y": 3, "shape": "straight", "rot": 0 }
+      ]
+    },
+    {
+      "id": 3, "name": "Around the Corner",
+      "cols": 4, "rows": 5,
+      "entry_col": 0, "exit_col": 3,
+      "tiles": [
+        { "x": 0, "y": 1, "shape": "elbow",    "rot": 0 },
+        { "x": 1, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 3, "y": 1, "shape": "elbow",    "rot": 1 },
+        { "x": 3, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 3, "y": 3, "shape": "straight", "rot": 0 }
+      ]
+    },
+    {
+      "id": 4, "name": "Zig-Zag",
+      "cols": 4, "rows": 6,
+      "entry_col": 1, "exit_col": 2,
+      "tiles": [
+        { "x": 1, "y": 1, "shape": "elbow",    "rot": 2 },
+        { "x": 2, "y": 1, "shape": "elbow",    "rot": 3 },
+        { "x": 2, "y": 2, "shape": "elbow",    "rot": 0 },
+        { "x": 1, "y": 2, "shape": "elbow",    "rot": 1 },
+        { "x": 1, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 4, "shape": "elbow",    "rot": 3 },
+        { "x": 2, "y": 4, "shape": "straight", "rot": 0 }
+      ]
+    },
+    {
+      "id": 5, "name": "T Choice",
+      "cols": 5, "rows": 5,
+      "entry_col": 2, "exit_col": 4,
+      "tiles": [
+        { "x": 2, "y": 1, "shape": "tee",      "rot": 0 },
+        { "x": 1, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 3, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 0, "y": 1, "shape": "elbow",    "rot": 0 },
+        { "x": 4, "y": 1, "shape": "elbow",    "rot": 1 },
+        { "x": 0, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 0, "y": 3, "shape": "elbow",    "rot": 3 },
+        { "x": 4, "y": 3, "shape": "elbow",    "rot": 2 }
+      ]
+    },
+    {
+      "id": 6, "name": "Dead End",
+      "cols": 5, "rows": 6,
+      "entry_col": 2, "exit_col": 2,
+      "tiles": [
+        { "x": 2, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 2, "shape": "elbow",    "rot": 0 },
+        { "x": 3, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 2, "shape": "elbow",    "rot": 1 },
+        { "x": 4, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 4, "shape": "elbow",    "rot": 2 },
+        { "x": 3, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 4, "shape": "elbow",    "rot": 3 },
+        { "x": 1, "y": 2, "shape": "elbow",    "rot": 1 },
+        { "x": 1, "y": 3, "shape": "elbow",    "rot": 2 },
+        { "x": 2, "y": 3, "shape": "tee",      "rot": 0 }
+      ]
+    },
+    {
+      "id": 7, "name": "Cross Traffic",
+      "cols": 5, "rows": 6,
+      "entry_col": 1, "exit_col": 3,
+      "tiles": [
+        { "x": 1, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 2, "shape": "tee",      "rot": 0 },
+        { "x": 0, "y": 2, "shape": "elbow",    "rot": 0 },
+        { "x": 2, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 3, "y": 2, "shape": "tee",      "rot": 0 },
+        { "x": 3, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 3, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 2, "shape": "elbow",    "rot": 1 },
+        { "x": 4, "y": 3, "shape": "elbow",    "rot": 2 },
+        { "x": 0, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 0, "y": 4, "shape": "elbow",    "rot": 3 },
+        { "x": 1, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 4, "shape": "elbow",    "rot": 0 }
+      ]
+    },
+    {
+      "id": 8, "name": "Three-Way",
+      "cols": 5, "rows": 7,
+      "entry_col": 2, "exit_col": 2,
+      "tiles": [
+        { "x": 2, "y": 1, "shape": "tee",      "rot": 0 },
+        { "x": 1, "y": 1, "shape": "elbow",    "rot": 0 },
+        { "x": 3, "y": 1, "shape": "elbow",    "rot": 1 },
+        { "x": 1, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 3, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 3, "shape": "elbow",    "rot": 3 },
+        { "x": 3, "y": 3, "shape": "elbow",    "rot": 2 },
+        { "x": 2, "y": 3, "shape": "tee",      "rot": 2 },
+        { "x": 2, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 5, "shape": "straight", "rot": 0 }
+      ]
+    },
+    {
+      "id": 9, "name": "Detour",
+      "cols": 6, "rows": 7,
+      "entry_col": 0, "exit_col": 5,
+      "tiles": [
+        { "x": 0, "y": 1, "shape": "elbow",    "rot": 0 },
+        { "x": 1, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 1, "shape": "elbow",    "rot": 1 },
+        { "x": 2, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 3, "shape": "elbow",    "rot": 3 },
+        { "x": 3, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 3, "shape": "elbow",    "rot": 1 },
+        { "x": 4, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 5, "shape": "elbow",    "rot": 3 },
+        { "x": 5, "y": 5, "shape": "elbow",    "rot": 2 },
+        { "x": 5, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 5, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 5, "y": 2, "shape": "tee",      "rot": 0 },
+        { "x": 3, "y": 1, "shape": "elbow",    "rot": 2 },
+        { "x": 4, "y": 1, "shape": "straight", "rot": 0 }
+      ]
+    },
+    {
+      "id": 10, "name": "Switchback",
+      "cols": 5, "rows": 8,
+      "entry_col": 2, "exit_col": 2,
+      "tiles": [
+        { "x": 2, "y": 1, "shape": "elbow",    "rot": 0 },
+        { "x": 3, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 1, "shape": "elbow",    "rot": 1 },
+        { "x": 4, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 3, "shape": "elbow",    "rot": 2 },
+        { "x": 3, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 3, "shape": "elbow",    "rot": 3 },
+        { "x": 0, "y": 3, "shape": "elbow",    "rot": 2 },
+        { "x": 0, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 0, "y": 5, "shape": "elbow",    "rot": 3 },
+        { "x": 1, "y": 5, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 5, "shape": "tee",      "rot": 2 },
+        { "x": 2, "y": 6, "shape": "straight", "rot": 0 },
+        { "x": 3, "y": 5, "shape": "elbow",    "rot": 2 },
+        { "x": 1, "y": 1, "shape": "straight", "rot": 0 }
+      ]
+    },
+    {
+      "id": 11, "name": "Hidden Path",
+      "cols": 6, "rows": 8,
+      "entry_col": 1, "exit_col": 4,
+      "tiles": [
+        { "x": 1, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 2, "shape": "tee",      "rot": 0 },
+        { "x": 0, "y": 2, "shape": "elbow",    "rot": 0 },
+        { "x": 2, "y": 2, "shape": "straight", "rot": 0 },
+        { "x": 3, "y": 2, "shape": "elbow",    "rot": 1 },
+        { "x": 3, "y": 3, "shape": "tee",      "rot": 1 },
+        { "x": 3, "y": 4, "shape": "elbow",    "rot": 3 },
+        { "x": 4, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 5, "y": 4, "shape": "elbow",    "rot": 1 },
+        { "x": 5, "y": 5, "shape": "straight", "rot": 0 },
+        { "x": 5, "y": 6, "shape": "elbow",    "rot": 2 },
+        { "x": 4, "y": 6, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 5, "shape": "elbow",    "rot": 3 },
+        { "x": 4, "y": 3, "shape": "elbow",    "rot": 2 },
+        { "x": 4, "y": 2, "shape": "tee",      "rot": 0 },
+        { "x": 5, "y": 2, "shape": "elbow",    "rot": 1 },
+        { "x": 5, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 4, "shape": "elbow",    "rot": 2 }
+      ]
+    },
+    {
+      "id": 12, "name": "The Big Drop",
+      "cols": 6, "rows": 9,
+      "entry_col": 3, "exit_col": 2,
+      "tiles": [
+        { "x": 3, "y": 1, "shape": "elbow",    "rot": 0 },
+        { "x": 4, "y": 1, "shape": "straight", "rot": 0 },
+        { "x": 5, "y": 1, "shape": "elbow",    "rot": 1 },
+        { "x": 5, "y": 2, "shape": "tee",      "rot": 2 },
+        { "x": 5, "y": 3, "shape": "elbow",    "rot": 2 },
+        { "x": 4, "y": 3, "shape": "straight", "rot": 0 },
+        { "x": 4, "y": 2, "shape": "elbow",    "rot": 3 },
+        { "x": 3, "y": 3, "shape": "elbow",    "rot": 1 },
+        { "x": 3, "y": 4, "shape": "tee",      "rot": 1 },
+        { "x": 2, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 4, "shape": "elbow",    "rot": 1 },
+        { "x": 1, "y": 5, "shape": "straight", "rot": 0 },
+        { "x": 1, "y": 6, "shape": "elbow",    "rot": 2 },
+        { "x": 2, "y": 6, "shape": "tee",      "rot": 2 },
+        { "x": 3, "y": 6, "shape": "elbow",    "rot": 2 },
+        { "x": 3, "y": 5, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 7, "shape": "straight", "rot": 0 },
+        { "x": 0, "y": 4, "shape": "straight", "rot": 0 },
+        { "x": 0, "y": 5, "shape": "elbow",    "rot": 0 },
+        { "x": 2, "y": 5, "shape": "straight", "rot": 0 },
+        { "x": 2, "y": 3, "shape": "elbow",    "rot": 2 },
+        { "x": 2, "y": 2, "shape": "straight", "rot": 0 }
+      ]
+    }
+  ]
+}

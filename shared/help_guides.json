@@ -1,0 +1,144 @@
+{
+  "guides": [
+    {
+      "id": "frozen-pipes",
+      "title": "Frozen Pipes: What to Do",
+      "summary": "Quick steps to thaw a frozen pipe safely and prevent a burst.",
+      "icon": "snowflake",
+      "sections": [
+        {
+          "heading": "Spot the warning signs",
+          "body": "If only a trickle comes out when you open a faucet on a cold day, a pipe is likely frozen. Pipes against exterior walls and in unheated spaces (basements, crawl spaces, attics) freeze first."
+        },
+        {
+          "heading": "Shut off the water",
+          "body": "Locate your main water shut-off valve and know how to use it. If a pipe bursts while frozen, shutting the main off fast can save thousands of dollars in damage."
+        },
+        {
+          "heading": "Thaw it gently",
+          "body": "Open the faucet so water can flow as the pipe thaws. Apply heat with a hair dryer, heating pad, or towels soaked in hot water. Never use an open flame, blowtorch, or kerosene heater."
+        },
+        {
+          "heading": "Prevent it next winter",
+          "body": "Insulate exposed pipes, seal drafts near pipes, keep cabinet doors open during deep freezes, and let a faucet drip if temperatures fall below 20°F."
+        },
+        {
+          "heading": "When to call us",
+          "body": "If you can't find the frozen section, the pipe is inside a wall, or you see bulging or cracking — call right away. We can locate the freeze, thaw it safely, and replace any damaged section."
+        }
+      ]
+    },
+    {
+      "id": "clogged-drain",
+      "title": "Clogged Drain Quick Fixes",
+      "summary": "Try these before reaching for harsh chemicals.",
+      "icon": "drain",
+      "sections": [
+        {
+          "heading": "Hot water + dish soap",
+          "body": "For a slow kitchen drain, pour a few squirts of dish soap followed by a kettle of hot (not boiling) water. The soap helps break up grease."
+        },
+        {
+          "heading": "Baking soda and vinegar",
+          "body": "Pour 1/2 cup baking soda down the drain, follow with 1/2 cup white vinegar, cover the drain, wait 15 minutes, then flush with hot water."
+        },
+        {
+          "heading": "Plunge it",
+          "body": "Use a cup plunger for sinks and tubs. Make sure there's enough water in the basin to cover the plunger cup, and seal off any overflow opening with a wet rag."
+        },
+        {
+          "heading": "Skip the chemical drain cleaners",
+          "body": "Liquid drain cleaners can damage older pipes, fixtures, and septic systems — and they can splash back when you finally have to open the line. They also make the job more dangerous for the plumber called in afterward."
+        },
+        {
+          "heading": "When to call us",
+          "body": "Recurring clogs, multiple drains backing up at once, gurgling toilets, or sewer smell are signs of a deeper blockage. We can snake or hydro-jet the line and inspect with a camera."
+        }
+      ]
+    },
+    {
+      "id": "water-heater-basics",
+      "title": "Water Heater Basics",
+      "summary": "How to keep your water heater running longer.",
+      "icon": "flame",
+      "sections": [
+        {
+          "heading": "Know your unit",
+          "body": "Most homes use a tank-style heater (40 or 50 gallons) powered by gas or electricity. Tankless heaters heat on demand and last longer but cost more upfront."
+        },
+        {
+          "heading": "Set the temperature",
+          "body": "150°F is too hot — it scalds and wastes energy. The Department of Energy recommends 120°F for a balance of safety and efficiency."
+        },
+        {
+          "heading": "Flush the tank yearly",
+          "body": "Sediment builds up at the bottom of the tank and reduces capacity and efficiency. Once a year, attach a hose to the drain valve and let several gallons run out until clear."
+        },
+        {
+          "heading": "Test the T&P valve",
+          "body": "The temperature/pressure relief valve is a critical safety device. Lift the lever briefly once a year — water should rush out and stop when you release. If it doesn't, replace the valve."
+        },
+        {
+          "heading": "When to call us",
+          "body": "Rust-colored water, popping or rumbling sounds, water pooling under the tank, or no hot water at all means it's time. Most tank heaters last 8–12 years."
+        }
+      ]
+    },
+    {
+      "id": "leak-detection",
+      "title": "Find a Hidden Leak",
+      "summary": "A small leak can waste thousands of gallons a year.",
+      "icon": "droplet",
+      "sections": [
+        {
+          "heading": "Read your water meter",
+          "body": "Turn off every faucet and water-using appliance. Note the meter reading, wait two hours without using any water, and check again. Any change means a leak somewhere in the system."
+        },
+        {
+          "heading": "Check the toilet",
+          "body": "Toilets are the #1 source of silent leaks. Add a few drops of food coloring to the tank and wait 15 minutes without flushing. If color appears in the bowl, the flapper is leaking."
+        },
+        {
+          "heading": "Look for telltale signs",
+          "body": "Watch for water stains on ceilings, warped flooring, mildew smell, peeling paint near plumbing, and unexpectedly high water bills."
+        },
+        {
+          "heading": "Outdoor leaks",
+          "body": "Soft spots in the yard, unusually green patches, or pooling water near the foundation can mean a service-line leak. These need professional attention quickly to prevent foundation damage."
+        },
+        {
+          "heading": "When to call us",
+          "body": "If your meter test shows movement but you can't find the source, we use acoustic and thermal leak-detection equipment to pinpoint hidden leaks without tearing up walls or floors."
+        }
+      ]
+    },
+    {
+      "id": "when-to-call",
+      "title": "When to Call a Pro",
+      "summary": "Knowing the difference can save your home and your wallet.",
+      "icon": "phone",
+      "sections": [
+        {
+          "heading": "Call immediately",
+          "body": "Burst pipe, sewage backup, no water at all, water heater leaking from the tank itself, gas smell near a gas water heater, or any flooding. Shut off the main and call us — these get worse fast."
+        },
+        {
+          "heading": "Call this week",
+          "body": "Persistent low water pressure, recurring clogs, water-heater age over 10 years, fixtures that drip after replacing washers, or any DIY repair you're not 100% sure about."
+        },
+        {
+          "heading": "Worth a phone consult",
+          "body": "Planning a remodel, adding a bathroom, switching to tankless, or buying a home and want a plumbing inspection. We're happy to walk through options before you commit."
+        },
+        {
+          "heading": "Things you can DIY",
+          "body": "Replacing a toilet flapper, swapping a showerhead, changing a faucet aerator, or unclogging a P-trap. If you're comfortable and the shutoff valves work — go for it."
+        },
+        {
+          "heading": "Why it matters",
+          "body": "Plumbing problems compound. A small drip becomes a stain, then mold, then a structural issue. The cheapest plumber visit is the one that catches it early."
+        }
+      ]
+    }
+  ]
+}

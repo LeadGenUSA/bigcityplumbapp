@@ -1,0 +1,44 @@
+name: BigCityPlumbing
+options:
+  bundleIdPrefix: com.bigcityplumbing
+  deploymentTarget:
+    iOS: "16.0"
+  developmentLanguage: en
+  groupSortPosition: top
+  generateEmptyDirectories: true
+  defaultConfig: Debug
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: NO
+
+targets:
+  BigCityPlumbing:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+    sources:
+      - path: BigCityPlumbing
+        excludes:
+          - "**/*.md"
+    resources:
+      - path: BigCityPlumbing/Resources
+    info:
+      path: BigCityPlumbing/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.bigcityplumbing.app
+        TARGETED_DEVICE_FAMILY: "1,2"
+        INFOPLIST_FILE: BigCityPlumbing/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        CODE_SIGN_STYLE: Automatic
+        # Apple Developer Team ID (Big City Plumbing)
+        DEVELOPMENT_TEAM: "3PG684LQYU"
+        ENABLE_PREVIEWS: YES
+        SWIFT_EMIT_LOC_STRINGS: YES
+        GENERATE_INFOPLIST_FILE: NO
+        CURRENT_PROJECT_VERSION: 1
+        MARKETING_VERSION: 1.0.0
