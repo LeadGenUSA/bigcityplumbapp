@@ -12,7 +12,7 @@ struct VideoHubView: View {
                 .foregroundStyle(.secondary)
                 .padding(.horizontal)
 
-            YouTubePlaylistWebView(url: AppConfig.youtubePlaylistEmbedURL)
+            YouTubePlaylistWebView(playlistID: AppConfig.youtubePlaylistID)
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -34,9 +34,12 @@ struct VideoHubView: View {
     }
 }
 
-/// SwiftUI wrapper for WKWebView. Loads the YouTube playlist embed URL.
+/// SwiftUI wrapper for WKWebView. Hosts the YouTube playlist inside a proper
+/// <iframe> on a youtube.com origin. Loading the bare /embed URL as a top-level
+/// page triggers YouTube's "player configuration error" (153); an iframe with a
+/// real origin (set via baseURL) is the reliable way to embed in a WKWebView.
 struct YouTubePlaylistWebView: UIViewRepresentable {
-    let url: URL
+    let playlistID: String
 
     func makeUIView(context: Context) -> WKWebView {
         let config = WKWebViewConfiguration()
@@ -50,11 +53,26 @@ struct YouTubePlaylistWebView: UIViewRepresentable {
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
-        // Load once. YouTube redirects the URL after loading, so comparing against
-        // `url` would reload endlessly; only load when nothing has loaded yet.
-        if webView.url == nil {
-            webView.load(URLRequest(url: url))
-        }
+        guard webView.url == nil, !webView.isLoading else { return }  // load once
+        let html = """
+        <!doctype html>
+        <html>
+        <head>
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+          <style>html,body{margin:0;padding:0;background:#000;height:100%}
+          .wrap{position:fixed;inset:0}iframe{border:0;width:100%;height:100%}</style>
+        </head>
+        <body>
+          <div class="wrap">
+            <iframe
+              src="https://www.youtube.com/embed/videoseries?list=\(playlistID)&playsinline=1&rel=0"
+              allow="encrypted-media; picture-in-picture; web-share; fullscreen"
+              allowfullscreen></iframe>
+          </div>
+        </body>
+        </html>
+        """
+        webView.loadHTMLString(html, baseURL: URL(string: "https://www.youtube.com"))
     }
 }
 

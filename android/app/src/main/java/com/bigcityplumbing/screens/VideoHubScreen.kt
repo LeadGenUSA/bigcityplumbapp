@@ -18,6 +18,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -43,7 +44,7 @@ fun VideoHubScreen() {
         )
 
         YouTubePlaylistView(
-            embedUrl = AppConfig.youtubePlaylistEmbedUrl(),
+            playlistId = AppConfig.YOUTUBE_PLAYLIST_ID,
             modifier = Modifier
                 .fillMaxWidth()
                 .weight(1f),
@@ -61,12 +62,25 @@ fun VideoHubScreen() {
 }
 
 /**
- * Lightweight WebView wrapper that loads a YouTube playlist embed.
- * For production, consider the official YouTube Player API for finer control.
+ * Hosts the YouTube playlist inside an <iframe> on a youtube.com origin.
+ * Loading the bare /embed URL as a top-level page triggers YouTube's
+ * "player configuration error" (153); an iframe with a real origin is reliable.
  */
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
-private fun YouTubePlaylistView(embedUrl: String, modifier: Modifier = Modifier) {
+private fun YouTubePlaylistView(playlistId: String, modifier: Modifier = Modifier) {
+    val html = remember(playlistId) {
+        """
+        <!doctype html><html><head>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <style>html,body{margin:0;padding:0;background:#000;height:100%}
+        .wrap{position:fixed;inset:0}iframe{border:0;width:100%;height:100%}</style>
+        </head><body><div class="wrap">
+        <iframe src="https://www.youtube.com/embed/videoseries?list=$playlistId&playsinline=1&rel=0"
+          allow="encrypted-media; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe>
+        </div></body></html>
+        """.trimIndent()
+    }
     AndroidView(
         modifier = modifier,
         factory = { ctx ->
@@ -81,9 +95,8 @@ private fun YouTubePlaylistView(embedUrl: String, modifier: Modifier = Modifier)
                 settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
                 webViewClient = WebViewClient()
                 webChromeClient = WebChromeClient()
-                loadUrl(embedUrl)
+                loadDataWithBaseURL("https://www.youtube.com", html, "text/html", "utf-8", null)
             }
         },
-        update = { webView -> webView.loadUrl(embedUrl) },
     )
 }
