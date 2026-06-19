@@ -1040,18 +1040,25 @@ function draw() {
     strokeWater(waterTrailPath(dropProgress.dist));
   }
 
-  // Logo marble floating on the leading edge of the water
-  let gx, gy;
+  // Logo marble. During the drop it flows through the pipes; otherwise it floats
+  // on the surface of the rising flood water, bobbing and rising as the room
+  // fills — then gets carried into the pipes when the player drops it.
+  const r = cell * 0.205;
+  let mx, my;
   if (dropping && dropProgress) {
     const pos = marblePosAt(dropProgress.dist);
-    gx = pos.cx; gy = pos.cy;
+    mx = originX + pos.cx * cell; my = originY + pos.cy * cell;
   } else if (win && dropProgress) {
     const e = dropProgress.wp[dropProgress.wp.length - 1];
-    gx = e.cx; gy = e.cy;
+    mx = originX + e.cx * cell; my = originY + e.cy * cell;
   } else {
-    gx = board.entry + 0.5; gy = 0.12;   // resting in the entry funnel mouth
+    // Float on the water surface, lined up over the entry pipe, bobbing gently.
+    const surfaceY = H - H * floodLevel;
+    const tt = performance.now() / 360;
+    mx = originX + (board.entry + 0.5) * cell + Math.sin(tt) * r * 0.5;
+    my = Math.min(H - r * 0.5, surfaceY - r * 0.35 + Math.sin(tt * 1.7) * r * 0.18);
   }
-  drawMarble(originX + gx * cell, originY + gy * cell, cell * 0.205);
+  drawMarble(mx, my, r);
 }
 
 // ===========================================================================
