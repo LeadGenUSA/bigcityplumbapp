@@ -2,8 +2,14 @@ import SwiftUI
 import WebKit
 
 /// Hosts the self-contained Pipe Drop HTML5 game (bundled at
-/// Resources/game/index.html) inside a WKWebView. Plays entirely offline.
+/// Resources/game/index.html) inside a WKWebView. Plays entirely offline and
+/// fullscreen: the bottom tab bar is hidden while the game is on screen, and
+/// an in-game "Home" button returns the app to the Home tab.
 struct PipePuzzleView: View {
+    /// Called when the player taps the in-game Home button. The tab bar is
+    /// hidden in fullscreen, so this is how the app switches away from the game.
+    var onExit: () -> Void = {}
+
     var body: some View {
         // GeometryReader gives the WebView an explicit, correct frame from its
         // very first layout, and GameWebKitView defers loading until that frame
@@ -11,11 +17,12 @@ struct PipePuzzleView: View {
         // the real device width (e.g. 390pt) instead of SwiftUI's intermediate
         // 320pt default — which it would otherwise pin for the page's lifetime.
         GeometryReader { geo in
-            GameWebView()
+            GameWebView(onExit: onExit)
                 .frame(width: geo.size.width, height: geo.size.height)
         }
         .ignoresSafeArea()
         .toolbar(.hidden, for: .navigationBar)  // game has its own header
+        .toolbar(.hidden, for: .tabBar)         // fullscreen: no bottom tab bar
     }
 }
 
@@ -41,10 +48,27 @@ final class GameWebKitView: WKWebView {
 }
 
 private struct GameWebView: UIViewRepresentable {
+    var onExit: () -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(onExit: onExit) }
+
+    /// Receives the "exitGame" message posted by the in-game Home button.
+    final class Coordinator: NSObject, WKScriptMessageHandler {
+        let onExit: () -> Void
+        init(onExit: @escaping () -> Void) { self.onExit = onExit }
+        func userContentController(_ controller: WKUserContentController,
+                                   didReceive message: WKScriptMessage) {
+            if message.name == "exitGame" { onExit() }
+        }
+    }
+
     func makeUIView(context: Context) -> GameWebKitView {
         let config = WKWebViewConfiguration()
         config.allowsInlineMediaPlayback = true
         config.preferences.javaScriptCanOpenWindowsAutomatically = false
+        // Bridge so the game's Home button (window.webkit.messageHandlers.exitGame)
+        // can ask SwiftUI to leave the fullscreen game.
+        config.userContentController.add(context.coordinator, name: "exitGame")
         // Start with a real screen-sized frame (not .zero) as extra insurance
         // so the viewport never resolves against a zero width.
         let webView = GameWebKitView(frame: UIScreen.main.bounds, configuration: config)

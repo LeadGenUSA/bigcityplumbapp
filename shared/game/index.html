@@ -60,12 +60,11 @@
   #board-wrap {
     flex: 1 1 auto;
     min-height: 0;
-    margin: 0 10px;
-    border-radius: 16px;
+    margin: 0;
+    border-radius: 0;
     background: var(--grout);
     overflow: hidden;
     position: relative;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   }
   canvas { display: block; width: 100%; height: 100%; touch-action: none; }
   .actions {
@@ -140,6 +139,7 @@
 </head>
 <body>
   <header>
+    <button class="nav-btn" id="home" aria-label="Home" style="display:none">🏠</button>
     <button class="nav-btn" id="prev" aria-label="Previous level">‹</button>
     <div class="title-block">
       <div class="level" id="lvlNum">LEVEL 1 OF 12</div>
@@ -876,6 +876,20 @@ document.getElementById("prev").addEventListener("click", () => loadLevel((level
 document.getElementById("next").addEventListener("click", () => loadLevel((levelIdx + 1) % LEVELS.length));
 document.getElementById("btnReplay").addEventListener("click", () => loadLevel(levelIdx));
 document.getElementById("btnContinue").addEventListener("click", () => loadLevel((levelIdx + 1) % LEVELS.length));
+
+// In-game Home button: only meaningful on iOS, where the game runs fullscreen
+// with the tab bar hidden. It asks the native app (via the "exitGame" message
+// handler) to switch back to the Home tab. On Android/web the handler doesn't
+// exist, so the button stays hidden and the platform's own nav is used.
+(function () {
+  const homeBtn = document.getElementById("home");
+  const exitHandler = window.webkit && window.webkit.messageHandlers
+    && window.webkit.messageHandlers.exitGame;
+  if (exitHandler) {
+    homeBtn.style.display = "";
+    homeBtn.addEventListener("click", () => exitHandler.postMessage(1));
+  }
+})();
 
 // Build a fine pixel-independent (grid-coord) waypoint list that threads the
 // marble through each port and cell center, so it stays inside the bore at bends.
