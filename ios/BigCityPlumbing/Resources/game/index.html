@@ -19,7 +19,7 @@
     --surface-var: #EFF3F8;
     --tile-light: #FCFCFA;
     --tile-dark: #EEF0F2;
-    --grout: #D2DAE6;
+    --grout: #103667;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
@@ -565,13 +565,13 @@ function resize() {
 // the gray steel pipes read clearly.
 function drawGrid(x, y, w, h) {
   ctx.save();
-  ctx.strokeStyle = "rgba(0,0,0,0.06)";
+  ctx.strokeStyle = "rgba(255,255,255,0.08)";
   ctx.lineWidth = Math.max(1, cell * 0.02);
   ctx.beginPath();
   for (let c = 0; c <= board.cols; c++) { ctx.moveTo(x + c * cell, y); ctx.lineTo(x + c * cell, y + h); }
   for (let r = 0; r <= board.rows; r++) { ctx.moveTo(x, y + r * cell); ctx.lineTo(x + w, y + r * cell); }
   ctx.stroke();
-  ctx.fillStyle = "rgba(0,0,0,0.10)";
+  ctx.fillStyle = "rgba(255,255,255,0.10)";
   for (let c = 0; c <= board.cols; c++)
     for (let r = 0; r <= board.rows; r++) {
       ctx.beginPath();
@@ -791,7 +791,7 @@ function draw() {
   const W = canvas.width / DPR, H = canvas.height / DPR;
   ctx.clearRect(0, 0, W, H);
   // Board background
-  ctx.fillStyle = "#dd650e";
+  ctx.fillStyle = "#103667";
   ctx.fillRect(0, 0, W, H);
   drawGrid(originX, originY, cell * board.cols, cell * board.rows);
 
