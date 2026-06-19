@@ -795,10 +795,10 @@ function draw() {
   ctx.fillRect(0, 0, W, H);
   drawGrid(originX, originY, cell * board.cols, cell * board.rows);
 
-  // Brand logo watermark, 35% opacity, behind the pipes
+  // Brand logo watermark, 25% opacity, behind the pipes
   const bw = cell * board.cols, bh = cell * board.rows;
   ctx.save();
-  ctx.globalAlpha = 0.35;
+  ctx.globalAlpha = 0.25;
   drawLogoBadge(originX + bw / 2, originY + bh / 2, Math.min(bw, bh) * 0.34);
   ctx.restore();
 
