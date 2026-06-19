@@ -5,10 +5,17 @@ import WebKit
 /// Resources/game/index.html) inside a WKWebView. Plays entirely offline.
 struct PipePuzzleView: View {
     var body: some View {
-        GameWebView()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .ignoresSafeArea()
-            .toolbar(.hidden, for: .navigationBar)
+        // GeometryReader gives the WebView a *concrete* size. A plain
+        // .frame(maxWidth:.infinity) doesn't override a UIViewRepresentable's
+        // intrinsic size, so WKWebView fell back to a 320pt layout width and
+        // scaled the page up. Passing explicit width/height makes the viewport
+        // resolve to the real device width (e.g. 390pt).
+        GeometryReader { geo in
+            GameWebView()
+                .frame(width: geo.size.width, height: geo.size.height)
+        }
+        .ignoresSafeArea()
+        .toolbar(.hidden, for: .navigationBar)
     }
 }
 
