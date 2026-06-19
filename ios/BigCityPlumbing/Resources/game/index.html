@@ -261,11 +261,13 @@ const Sound = (function () {
       tone(115, 0.30, "square", 0.16, 0.68);
     },
     tension: function (intensity) {
-      // One ominous beat of the rising-water "countdown" music. Pitch rises and
-      // an upper fifth swells in as intensity (the flood level, 0..1) grows.
-      const base = 58 + intensity * 54;                         // ~58 -> ~112 Hz
-      tone(base, 0.20, "triangle", 0.09, 0);
-      tone(base * 1.5, 0.12, "sine", 0.02 + 0.05 * intensity, 0.015);
+      // One menacing beat of the rising-water "countdown" music. A harsh sawtooth
+      // fundamental + sub-bass rumble, with a dissonant tritone ("diabolus in
+      // musica") that swells in as intensity (the flood level, 0..1) grows.
+      const base = 52 + intensity * 46;                         // ~52 -> ~98 Hz, dark
+      tone(base, 0.22, "sawtooth", 0.13, 0);                    // harsh fundamental
+      tone(base * 0.5, 0.26, "sine", 0.10, 0);                  // sub-bass rumble
+      tone(base * 1.414, 0.16, "sawtooth", 0.03 + 0.08 * intensity, 0.02); // tritone
     },
     isMuted: function () { return muted; },
     toggle: function () {
@@ -632,7 +634,8 @@ function floodTick(now) {
   floodLevel = Math.min(1, floodLevel + dt / floodDuration);
   // Impending "countdown" music: beats accelerate as the room fills.
   tensionTimer += dt;
-  const beatInterval = 1100 - floodLevel * 850;   // ~1100ms (calm) -> ~250ms (frantic)
+  // pow(<1) ramps the tempo up early; floor ~130ms = frantic near the top.
+  const beatInterval = 900 - 770 * Math.pow(floodLevel, 0.7);   // ~900ms -> ~130ms
   if (tensionTimer >= beatInterval) { tensionTimer = 0; Sound.tension(floodLevel); }
   draw();
   if (floodLevel >= 1) { triggerFlood(); return; }
