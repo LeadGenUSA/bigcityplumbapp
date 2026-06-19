@@ -5,9 +5,17 @@ import WebKit
 /// Resources/game/index.html) inside a WKWebView. Plays entirely offline.
 struct PipePuzzleView: View {
     var body: some View {
-        GameWebView()
-            .ignoresSafeArea()
-            .toolbar(.hidden, for: .navigationBar)  // game has its own header
+        // GeometryReader gives the WebView an explicit, correct frame from its
+        // very first layout, and GameWebKitView defers loading until that frame
+        // is non-zero. Together they guarantee WKWebView fixes its viewport at
+        // the real device width (e.g. 390pt) instead of SwiftUI's intermediate
+        // 320pt default — which it would otherwise pin for the page's lifetime.
+        GeometryReader { geo in
+            GameWebView()
+                .frame(width: geo.size.width, height: geo.size.height)
+        }
+        .ignoresSafeArea()
+        .toolbar(.hidden, for: .navigationBar)  // game has its own header
     }
 }
 
