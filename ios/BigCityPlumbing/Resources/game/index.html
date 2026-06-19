@@ -260,6 +260,13 @@ const Sound = (function () {
       tone(150, 0.22, "square", 0.16, 0.36);
       tone(115, 0.30, "square", 0.16, 0.68);
     },
+    tension: function (intensity) {
+      // One ominous beat of the rising-water "countdown" music. Pitch rises and
+      // an upper fifth swells in as intensity (the flood level, 0..1) grows.
+      const base = 58 + intensity * 54;                         // ~58 -> ~112 Hz
+      tone(base, 0.20, "triangle", 0.09, 0);
+      tone(base * 1.5, 0.12, "sine", 0.02 + 0.05 * intensity, 0.015);
+    },
     isMuted: function () { return muted; },
     toggle: function () {
       muted = !muted;
@@ -586,6 +593,7 @@ let floodActive = false;   // water is currently rising
 let floodLevel = 0;        // 0 = empty, 1 = full
 let floodDuration = 30000; // ms to fill, set per level in loadLevel
 let floodLast = 0;         // timestamp of last flood tick
+let tensionTimer = 0;      // ms accumulated toward the next tension beat
 
 function key(x, y) { return x + "," + y; }
 
@@ -622,6 +630,10 @@ function floodTick(now) {
   const dt = Math.min(100, now - floodLast);
   floodLast = now;
   floodLevel = Math.min(1, floodLevel + dt / floodDuration);
+  // Impending "countdown" music: beats accelerate as the room fills.
+  tensionTimer += dt;
+  const beatInterval = 1100 - floodLevel * 850;   // ~1100ms (calm) -> ~250ms (frantic)
+  if (tensionTimer >= beatInterval) { tensionTimer = 0; Sound.tension(floodLevel); }
   draw();
   if (floodLevel >= 1) { triggerFlood(); return; }
   requestAnimationFrame(floodTick);
@@ -629,6 +641,7 @@ function floodTick(now) {
 function startFlood() {
   flooded = false;
   floodLevel = 0;
+  tensionTimer = 0;
   resumeFlood();
 }
 function resumeFlood() {
