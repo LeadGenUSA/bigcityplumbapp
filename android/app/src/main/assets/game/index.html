@@ -645,7 +645,7 @@ function triggerFlood() {
   draw();
   Sound.flood();
   if (navigator.vibrate) navigator.vibrate([120, 60, 120, 60, 240]);
-  showOverlay(false, "Too late!", "The pipes flooded — try again.",
+  showOverlay(false, "Too late!", "Drain pipe not connected — room flooded! Try again!",
               () => loadLevel(levelIdx));
 }
 
