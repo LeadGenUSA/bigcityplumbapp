@@ -6,9 +6,9 @@ import WebKit
 struct PipePuzzleView: View {
     var body: some View {
         GameWebView()
-            .ignoresSafeArea(.container, edges: .bottom)
-            .navigationTitle("Pipe Drop")
-            .navigationBarTitleDisplayMode(.inline)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea()
+            .toolbar(.hidden, for: .navigationBar)
     }
 }
 
