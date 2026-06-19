@@ -1050,21 +1050,6 @@ loadLevel(0);
 requestAnimationFrame(() => { resize(); draw(); });
 setTimeout(() => { resize(); draw(); }, 150);
 
-// ---- TEMP DIAGNOSTIC readout (remove once the iOS board renders) ----
-(function () {
-  const dbg = document.createElement("div");
-  dbg.style.cssText = "position:fixed;left:0;bottom:0;z-index:99998;background:rgba(0,0,0,0.75);color:#0f0;font:11px monospace;padding:4px 6px;";
-  document.body.appendChild(dbg);
-  setInterval(function () {
-    const w = document.getElementById("board-wrap");
-    dbg.textContent =
-      "win " + window.innerWidth + "x" + window.innerHeight +
-      " | wrap " + (w ? w.clientWidth + "x" + w.clientHeight : "-") +
-      " | cv " + canvas.width + "x" + canvas.height +
-      " | cell " + (cell || 0).toFixed(1) +
-      " | logo " + (logoReady ? 1 : 0);
-  }, 300);
-})();
 </script>
 </body>
 </html>
