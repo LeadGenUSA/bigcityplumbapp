@@ -4,19 +4,25 @@ struct HomeView: View {
     @Environment(\.openURL) private var openURL
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: 16) {
-                hero
-                callButton
-                if !AppConfig.offers.isEmpty { offersSection }
-                Text("What can we help with?")
-                    .font(.title2.bold())
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                tileGrid
-                Spacer(minLength: 8)
+        // Hero lives OUTSIDE the ScrollView so its gradient can bleed up behind
+        // the status bar (a ScrollView insets its content below the safe area,
+        // which is what left the white strip). The rest scrolls below it.
+        VStack(spacing: 0) {
+            hero
+            ScrollView {
+                VStack(spacing: 16) {
+                    callButton
+                    if !AppConfig.offers.isEmpty { offersSection }
+                    Text("What can we help with?")
+                        .font(.title2.bold())
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.horizontal)
+                    tileGrid
+                    Spacer(minLength: 8)
+                }
+                .padding(.top, 16)
+                .padding(.bottom, 16)
             }
-            .padding(.bottom, 16)
         }
         .toolbar(.hidden, for: .navigationBar)
         .background(Color(.systemBackground))
