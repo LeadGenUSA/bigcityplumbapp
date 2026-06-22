@@ -224,15 +224,43 @@ private fun buildVideoWebView(context: android.content.Context): WebView =
         webChromeClient = WebChromeClient()
     }
 
+// IFrame API with controls:0 hides YouTube's logo and title. A transparent tap
+// layer over the player toggles play/pause AND swallows every tap so nothing
+// (logo, "Watch on YouTube", end-screen links) can navigate out to YouTube.
 private fun singleVideoHtml(videoId: String): String = """
     <!doctype html><html><head>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <style>html,body{margin:0;padding:0;background:#000;height:100%}
-    .wrap{position:fixed;inset:0}iframe{border:0;width:100%;height:100%}</style>
-    </head><body><div class="wrap">
-    <iframe src="https://www.youtube.com/embed/$videoId?playsinline=1&rel=0&autoplay=1&origin=https://www.bigcityplumbing.com"
-      allow="autoplay; encrypted-media; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe>
-    </div></body></html>
+    <style>
+      html,body{margin:0;padding:0;background:#000;height:100%;overflow:hidden}
+      #player{position:fixed;inset:0;width:100%;height:100%;border:0}
+      #tap{position:fixed;inset:0;z-index:2;background:transparent}
+    </style>
+    </head><body>
+    <div id="player"></div>
+    <div id="tap"></div>
+    <script>
+      var player, ready = false;
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      document.head.appendChild(tag);
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+          videoId: '$videoId',
+          playerVars: {
+            autoplay: 1, controls: 0, rel: 0, modestbranding: 1, playsinline: 1,
+            iv_load_policy: 3, disablekb: 1, fs: 0,
+            origin: 'https://www.bigcityplumbing.com'
+          },
+          events: { onReady: function (e) { ready = true; e.target.playVideo(); } }
+        });
+      }
+      document.getElementById('tap').addEventListener('click', function () {
+        if (!ready || !player) return;
+        if (player.getPlayerState() === YT.PlayerState.PLAYING) player.pauseVideo();
+        else player.playVideo();
+      });
+    </script>
+    </body></html>
 """.trimIndent()
 
 // ---- Video loading ---------------------------------------------------------
