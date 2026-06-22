@@ -143,7 +143,7 @@
     <button class="nav-btn" id="prev" aria-label="Previous level">‹</button>
     <div class="title-block">
       <div class="level" id="lvlNum">LEVEL 1 OF 12</div>
-      <div class="name" id="lvlName">First Drop</div>
+      <div class="name" id="lvlName">Connect Drain Pipes</div>
     </div>
     <button class="nav-btn" id="next" aria-label="Next level">›</button>
     <button class="nav-btn" id="mute" aria-label="Toggle sound">🔊</button>
@@ -168,7 +168,7 @@
   </div>
   <div class="actions">
     <button class="btn" id="btnDrop">
-      Drop ball
+      Drain Room
     </button>
     <button class="btn secondary" id="btnReset">↻ Reset</button>
   </div>
@@ -1273,7 +1273,7 @@ function getBest(idx) {
 
 function updateHud() {
   document.getElementById("lvlNum").textContent = "LEVEL " + (levelIdx + 1) + " OF " + LEVELS.length;
-  document.getElementById("lvlName").textContent = LEVELS[levelIdx].name;
+  document.getElementById("lvlName").textContent = "Connect Drain Pipes";
   document.getElementById("moves").textContent = String(moves);
   document.getElementById("prev").disabled = false;
   document.getElementById("next").disabled = false;
