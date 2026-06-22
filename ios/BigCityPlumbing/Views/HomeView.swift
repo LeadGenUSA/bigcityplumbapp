@@ -4,13 +4,14 @@ struct HomeView: View {
     @Environment(\.openURL) private var openURL
 
     var body: some View {
-        // Hero lives OUTSIDE the ScrollView so its gradient can bleed up behind
-        // the status bar (a ScrollView insets its content below the safe area,
-        // which is what left the white strip). The rest scrolls below it.
-        VStack(spacing: 0) {
-            hero
+        // Hero is the first scrolling item (so it scrolls, like Android). The
+        // ScrollView extends under the status bar via .ignoresSafeArea so the
+        // blue hero fills the top with no white strip, and the hero pads its own
+        // content down by the safe-area inset so the logo/text clear the notch.
+        GeometryReader { geo in
             ScrollView {
                 VStack(spacing: 16) {
+                    hero(topInset: geo.safeAreaInsets.top)
                     callButton
                     if !AppConfig.offers.isEmpty { offersSection }
                     Text("What can we help with?")
@@ -20,15 +21,15 @@ struct HomeView: View {
                     tileGrid
                     Spacer(minLength: 8)
                 }
-                .padding(.top, 16)
                 .padding(.bottom, 16)
             }
+            .ignoresSafeArea(.container, edges: .top)
         }
         .toolbar(.hidden, for: .navigationBar)
         .background(Color(.systemBackground))
     }
 
-    private var hero: some View {
+    private func hero(topInset: CGFloat) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Image("BigCityLogo")
                 .resizable()
@@ -49,16 +50,15 @@ struct HomeView: View {
                 .padding(.top, 8)
         }
         .padding(20)
+        .padding(.top, topInset)   // push content below the status bar/notch
         .frame(maxWidth: .infinity, alignment: .leading)
-        // Gradient is the background so it can bleed up behind the status bar
-        // (removing the white strip at the top) while the text stays in the
-        // safe area.
+        // Gradient fills the whole header, including the safe-area padding above,
+        // so the blue reaches the top edge while the content stays below it.
         .background(
             LinearGradient(
                 colors: [Theme.brandBlue, Theme.brandBlueDark],
                 startPoint: .top, endPoint: .bottom
             )
-            .ignoresSafeArea(edges: .top)
         )
     }
 
