@@ -75,6 +75,9 @@ dependencies {
     // WebView for YouTube embed
     implementation("androidx.webkit:webkit:1.11.0")
 
+    // Image loading for video thumbnails
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
     // JSON parsing — using org.json (built into Android) to avoid extra plugin
 
     // Test
