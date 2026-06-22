@@ -19,7 +19,7 @@ enum AppConfig {
     static let companyAddress = "2639 Middle Country Rd, Centereach, NY 11720"
     static let phoneNumberDisplay = "(631) 361-9500"
     static let phoneNumberDial = "+16313619500"  // tel: format, no spaces
-    static let email = "service@example.com"
+    static let email = "mike@bigcityplumbing.com"
     static let websiteURL = URL(string: "https://example.com")!
 
     // YouTube — the Videos tab shows this playlist (must be Public or Unlisted to embed).

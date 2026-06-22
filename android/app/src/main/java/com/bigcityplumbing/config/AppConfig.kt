@@ -28,7 +28,7 @@ object AppConfig {
     const val COMPANY_ADDRESS = "2639 Middle Country Rd, Centereach, NY 11720"
     const val PHONE_NUMBER_DISPLAY = "(631) 361-9500"   // shown to user
     const val PHONE_NUMBER_DIAL = "+16313619500"        // tel: format, no spaces
-    const val EMAIL = "service@example.com"
+    const val EMAIL = "mike@bigcityplumbing.com"
     const val WEBSITE_URL = "https://example.com"
 
     // YouTube — the Videos tab shows this playlist (must be Public or Unlisted to embed).
