@@ -36,7 +36,7 @@ object AppConfig {
     // anon key + secret once the function exists; until then the form falls back
     // to opening the mail app.
     const val SERVICE_REQUEST_URL = "https://wjaulyvqzywcnkegnzoh.supabase.co/functions/v1/send-app-service-request"
-    const val SUPABASE_ANON_KEY = ""   // public anon key (eyJ…)
+    const val SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqYXVseXZxenl3Y25rZWduem9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1NTYzODUsImV4cCI6MjA4NTEzMjM4NX0.qlt8PJNz2KCp4d1-JyMP2eymvUy_hyBVpQDHfIZwfnI"   // public anon key
     const val APP_FORM_SECRET = ""     // must match APP_FORM_SECRET in the function
 
     /** True once the in-app submit endpoint is fully configured. */

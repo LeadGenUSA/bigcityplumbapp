@@ -26,7 +26,7 @@ enum AppConfig {
     // anon key + secret once the function exists; until then the form falls back
     // to opening the mail app.
     static let serviceRequestURL = "https://wjaulyvqzywcnkegnzoh.supabase.co/functions/v1/send-app-service-request"
-    static let supabaseAnonKey = ""   // public anon key (eyJ…)
+    static let supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndqYXVseXZxenl3Y25rZWduem9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njk1NTYzODUsImV4cCI6MjA4NTEzMjM4NX0.qlt8PJNz2KCp4d1-JyMP2eymvUy_hyBVpQDHfIZwfnI"   // public anon key
     static let appFormSecret = ""     // must match APP_FORM_SECRET in the function
 
     /// True once the in-app submit endpoint is fully configured.
