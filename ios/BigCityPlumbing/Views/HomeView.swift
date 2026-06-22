@@ -18,32 +18,35 @@ struct HomeView: View {
             }
             .padding(.bottom, 16)
         }
-        .navigationBarHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .background(Color(.systemBackground))
     }
 
     private var hero: some View {
-        ZStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(AppConfig.companyName)
+                .font(.largeTitle.bold())
+                .foregroundStyle(.white)
+            Text("Centereach, NY • Licensed & Insured")
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.85))
+            Text("Plumbing, heating & emergency service.\nTap below to call us 24/7.")
+                .font(.body)
+                .foregroundStyle(.white)
+                .padding(.top, 8)
+        }
+        .padding(20)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        // Gradient is the background so it can bleed up behind the status bar
+        // (removing the white strip at the top) while the text stays in the
+        // safe area.
+        .background(
             LinearGradient(
                 colors: [Theme.brandBlue, Theme.brandBlueDark],
                 startPoint: .top, endPoint: .bottom
             )
-            VStack(alignment: .leading, spacing: 6) {
-                Text(AppConfig.companyName)
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.white)
-                Text("Centereach, NY • Licensed & Insured")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.85))
-                Text("Plumbing, heating & emergency service.\nTap below to call us 24/7.")
-                    .font(.body)
-                    .foregroundStyle(.white)
-                    .padding(.top, 8)
-            }
-            .padding(20)
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .frame(maxWidth: .infinity)
+            .ignoresSafeArea(edges: .top)
+        )
     }
 
     private var callButton: some View {
