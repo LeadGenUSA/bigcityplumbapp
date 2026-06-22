@@ -5,49 +5,114 @@ import WebKit
 
 // MARK: - Model
 
-/// One video from the playlist. Thumbnails come straight from YouTube's image
-/// CDN by video ID (hqdefault is 4:3 with letterbox bars that a 16:9 fill crops
-/// off cleanly).
+/// One video from the playlist. `published` is the ISO-8601 publish date used
+/// to sort newest-first (ISO strings sort chronologically). Thumbnails come
+/// from YouTube's image CDN by video ID (hqdefault is 4:3 with letterbox bars
+/// that a 16:9 crop removes cleanly).
 struct PlaylistVideo: Identifiable, Hashable {
     let id: String
     let title: String
+    let published: String
     var thumbnailURL: URL { URL(string: "https://i.ytimg.com/vi/\(id)/hqdefault.jpg")! }
 }
 
-// MARK: - Playlist feed loader
+// MARK: - Loader
 
-/// Loads the playlist's videos from YouTube's public RSS/Atom feed
-/// (no API key required). Note: the feed returns only the ~15 most recent
-/// videos — switch to the YouTube Data API if the playlist grows beyond that.
+/// Loads the playlist's videos. Uses the YouTube Data API (all videos, sorted
+/// newest-first) when an API key is configured; otherwise falls back to the
+/// public RSS feed (most-recent ~15 videos).
 @MainActor
 final class PlaylistLoader: ObservableObject {
     enum State { case loading, loaded, failed }
     @Published var videos: [PlaylistVideo] = []
     @Published var state: State = .loading
 
-    func load(playlistID: String) {
+    func load() {
         state = .loading
-        guard let url = URL(string:
-            "https://www.youtube.com/feeds/videos.xml?playlist_id=\(playlistID)") else {
-            state = .failed; return
+        Task {
+            let result = await Self.fetch()
+            self.videos = result
+            self.state = result.isEmpty ? .failed : .loaded
         }
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            let parsed = data.map { YouTubeFeedParser.parse($0) } ?? []
-            Task { @MainActor in
-                guard let self else { return }
-                self.videos = parsed
-                self.state = parsed.isEmpty ? .failed : .loaded
+    }
+
+    private static func fetch() async -> [PlaylistVideo] {
+        if !AppConfig.youtubeApiKey.isEmpty,
+           let viaAPI = try? await fetchViaAPI(), !viaAPI.isEmpty {
+            return viaAPI
+        }
+        return (try? await fetchViaRSS()) ?? []
+    }
+
+    // YouTube Data API v3: playlistItems.list, paged, sorted newest-first.
+    private static func fetchViaAPI() async throws -> [PlaylistVideo] {
+        var collected: [PlaylistVideo] = []
+        var pageToken: String?
+        repeat {
+            var comps = URLComponents(string: "https://www.googleapis.com/youtube/v3/playlistItems")!
+            comps.queryItems = [
+                URLQueryItem(name: "part", value: "snippet,contentDetails"),
+                URLQueryItem(name: "maxResults", value: "50"),
+                URLQueryItem(name: "playlistId", value: AppConfig.youtubePlaylistID),
+                URLQueryItem(name: "key", value: AppConfig.youtubeApiKey),
+            ]
+            if let token = pageToken {
+                comps.queryItems?.append(URLQueryItem(name: "pageToken", value: token))
             }
-        }.resume()
+            let (data, response) = try await URLSession.shared.data(from: comps.url!)
+            if let http = response as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
+                throw URLError(.badServerResponse)
+            }
+            let decoded = try JSONDecoder().decode(APIResponse.self, from: data)
+            for item in decoded.items {
+                let id = item.contentDetails?.videoId ?? item.snippet.resourceId?.videoId ?? ""
+                guard !id.isEmpty else { continue }
+                let published = item.contentDetails?.videoPublishedAt ?? item.snippet.publishedAt ?? ""
+                collected.append(PlaylistVideo(id: id, title: item.snippet.title, published: published))
+            }
+            pageToken = decoded.nextPageToken
+        } while pageToken != nil
+        return collected.sorted { $0.published > $1.published }   // newest first
+    }
+
+    private static func fetchViaRSS() async throws -> [PlaylistVideo] {
+        let url = URL(string:
+            "https://www.youtube.com/feeds/videos.xml?playlist_id=\(AppConfig.youtubePlaylistID)")!
+        let (data, _) = try await URLSession.shared.data(from: url)
+        return YouTubeFeedParser.parse(data).sorted { $0.published > $1.published }
     }
 }
 
-/// Minimal XMLParser delegate that pulls (videoId, title) out of each <entry>.
+// MARK: - Data API response (Codable)
+
+private struct APIResponse: Decodable {
+    let items: [APIItem]
+    let nextPageToken: String?
+}
+private struct APIItem: Decodable {
+    let snippet: APISnippet
+    let contentDetails: APIContentDetails?
+}
+private struct APISnippet: Decodable {
+    let title: String
+    let publishedAt: String?
+    let resourceId: APIResourceId?
+}
+private struct APIResourceId: Decodable { let videoId: String? }
+private struct APIContentDetails: Decodable {
+    let videoId: String?
+    let videoPublishedAt: String?
+}
+
+// MARK: - RSS feed parser
+
+/// Minimal XMLParser delegate pulling (videoId, title, published) from each <entry>.
 private final class YouTubeFeedParser: NSObject, XMLParserDelegate {
     private var videos: [PlaylistVideo] = []
     private var insideEntry = false
     private var currentVideoID: String?
     private var currentTitle = ""
+    private var currentPublished = ""
     private var buffer = ""
 
     static func parse(_ data: Data) -> [PlaylistVideo] {
@@ -65,41 +130,36 @@ private final class YouTubeFeedParser: NSObject, XMLParserDelegate {
             insideEntry = true
             currentVideoID = nil
             currentTitle = ""
+            currentPublished = ""
         }
         buffer = ""
     }
 
-    func parser(_ parser: XMLParser, foundCharacters string: String) {
-        buffer += string
-    }
+    func parser(_ parser: XMLParser, foundCharacters string: String) { buffer += string }
 
     func parser(_ parser: XMLParser, didEndElement elementName: String,
                 namespaceURI: String?, qualifiedName qName: String?) {
         guard insideEntry else { buffer = ""; return }
         let text = buffer.trimmingCharacters(in: .whitespacesAndNewlines)
         switch elementName {
-        case "yt:videoId":
-            currentVideoID = text
-        case "title" where currentTitle.isEmpty:
-            currentTitle = text
+        case "yt:videoId": currentVideoID = text
+        case "title" where currentTitle.isEmpty: currentTitle = text
+        case "published" where currentPublished.isEmpty: currentPublished = text
         case "entry":
             if let id = currentVideoID, !id.isEmpty {
-                videos.append(PlaylistVideo(id: id, title: currentTitle))
+                videos.append(PlaylistVideo(id: id, title: currentTitle, published: currentPublished))
             }
             insideEntry = false
-        default:
-            break
+        default: break
         }
         buffer = ""
     }
 }
 
-// MARK: - Video Hub (grid)
+// MARK: - Video Hub (single-column list)
 
 struct VideoHubView: View {
     @StateObject private var loader = PlaylistLoader()
-    private let columns = [GridItem(.flexible(), spacing: 12),
-                           GridItem(.flexible(), spacing: 12)]
 
     var body: some View {
         Group {
@@ -112,13 +172,13 @@ struct VideoHubView: View {
                     Image(systemName: "wifi.exclamationmark")
                         .font(.largeTitle).foregroundStyle(.secondary)
                     Text("Couldn't load videos.").foregroundStyle(.secondary)
-                    Button("Retry") { loader.load(playlistID: AppConfig.youtubePlaylistID) }
+                    Button("Retry") { loader.load() }
                         .buttonStyle(.borderedProminent)
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .loaded:
                 ScrollView {
-                    LazyVGrid(columns: columns, spacing: 16) {
+                    LazyVStack(spacing: 18) {
                         ForEach(loader.videos) { video in
                             NavigationLink(destination: VideoPlayerView(video: video)) {
                                 VideoCard(video: video)
@@ -131,7 +191,7 @@ struct VideoHubView: View {
             }
         }
         .navigationTitle("Video Hub")
-        .onAppear { if loader.state != .loaded { loader.load(playlistID: AppConfig.youtubePlaylistID) } }
+        .onAppear { if loader.state != .loaded { loader.load() } }
     }
 }
 
@@ -139,7 +199,7 @@ private struct VideoCard: View {
     let video: PlaylistVideo
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
+        VStack(alignment: .leading, spacing: 8) {
             ZStack {
                 Color(.secondarySystemBackground)
                 AsyncImage(url: video.thumbnailURL) { image in
@@ -148,16 +208,16 @@ private struct VideoCard: View {
                     ProgressView()
                 }
                 Image(systemName: "play.circle.fill")
-                    .font(.system(size: 36))
+                    .font(.system(size: 46))
                     .foregroundStyle(.white.opacity(0.92))
-                    .shadow(radius: 3)
+                    .shadow(radius: 4)
             }
             .aspectRatio(16.0 / 9.0, contentMode: .fill)
             .frame(maxWidth: .infinity)
-            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
 
             Text(video.title)
-                .font(.subheadline).fontWeight(.semibold)
+                .font(.headline)
                 .foregroundStyle(.primary)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
@@ -179,9 +239,9 @@ struct VideoPlayerView: View {
     }
 }
 
-/// Plays a single YouTube video embedded in-app. Uses the same third-party
-/// origin baseURL as the playlist embed to avoid YouTube's "Video unavailable"
-/// (error 152) for embeds hosted on youtube.com itself.
+/// Plays a single YouTube video embedded in-app. Uses a third-party origin
+/// baseURL to avoid YouTube's "Video unavailable" (error 152) for embeds hosted
+/// on youtube.com itself.
 private struct SingleVideoWebView: UIViewRepresentable {
     let videoID: String
 

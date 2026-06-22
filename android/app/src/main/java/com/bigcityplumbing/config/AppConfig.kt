@@ -35,6 +35,12 @@ object AppConfig {
     // Playlist ID is the part after "list=" in a youtube.com/playlist?list=... URL.
     const val YOUTUBE_PLAYLIST_ID = "PLCA5F1wp6EynBq4VyPhGawPTbUypB3uRF"
 
+    // YouTube Data API v3 key (read-only). Lets the Videos tab list ALL videos,
+    // newest first. Restrict it in Google Cloud Console to the YouTube Data API
+    // and to this app's package. Leave empty to fall back to the public RSS feed
+    // (most-recent ~15 videos only).
+    const val YOUTUBE_API_KEY = ""
+
     // Coupons shown on the Home tab. Edit/add/remove freely — the Home screen
     // adapts to however many are listed. Keep "discount" short so it fits the card.
     val OFFERS: List<Coupon> = listOf(

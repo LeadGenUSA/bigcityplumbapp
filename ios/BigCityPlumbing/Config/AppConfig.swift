@@ -26,6 +26,12 @@ enum AppConfig {
     // Playlist ID is the part after "list=" in a youtube.com/playlist?list=... URL.
     static let youtubePlaylistID = "PLCA5F1wp6EynBq4VyPhGawPTbUypB3uRF"
 
+    // YouTube Data API v3 key (read-only). Lets the Videos tab list ALL videos,
+    // newest first. Restrict it in Google Cloud Console to the YouTube Data API
+    // and to this app's bundle ID. Leave empty to fall back to the public RSS
+    // feed (most-recent ~15 videos only).
+    static let youtubeApiKey = ""
+
     /// Coupons shown on the Home tab. Edit/add/remove freely — the Home screen adapts.
     static let offers: [Coupon] = [
         Coupon(discount: "$25 OFF", title: "Any Service Call",
