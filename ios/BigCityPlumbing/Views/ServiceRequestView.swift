@@ -21,9 +21,10 @@ struct ServiceRequestView: View {
     @State private var serviceType: String = SERVICE_TYPES.first!
     @State private var details = ""
 
-    @State private var showMail = false
+    @State private var submitting = false
     @State private var alertMessage: String?
     @State private var showSuccess = false
+    @State private var successMessage = ""
 
     var body: some View {
         Form {
@@ -76,14 +77,19 @@ struct ServiceRequestView: View {
             Section {
                 Button(action: submit) {
                     HStack {
-                        Image(systemName: "envelope.fill")
-                        Text("Submit Request").bold()
+                        if submitting {
+                            ProgressView().tint(.white)
+                        } else {
+                            Image(systemName: "paperplane.fill")
+                            Text("Submit Request").bold()
+                        }
                     }
                     .frame(maxWidth: .infinity, minHeight: 44)
                     .foregroundStyle(.white)
                     .background(Theme.brandBlue)
                     .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
                 }
+                .disabled(submitting)
                 .listRowInsets(EdgeInsets())
                 .listRowBackground(Color.clear)
             }
@@ -97,10 +103,10 @@ struct ServiceRequestView: View {
         } message: {
             Text(alertMessage ?? "")
         }
-        .alert("Request prepared", isPresented: $showSuccess) {
+        .alert("Request sent", isPresented: $showSuccess) {
             Button("OK") { showSuccess = false }
         } message: {
-            Text("We've opened your email app. Send the message to finish your request.")
+            Text(successMessage)
         }
     }
 
@@ -115,18 +121,60 @@ struct ServiceRequestView: View {
             alertMessage = "Please enter the service address."; return
         }
 
-        let subject = "Service request: \(serviceType)"
-        var bodyLines: [String] = [
-            "Name: \(name)",
-            "Phone: \(phone)",
+        if AppConfig.serviceFormConfigured {
+            Task { await sendInApp() }
+        } else {
+            sendViaMail()   // fallback until the endpoint keys are configured
+        }
+    }
+
+    /// POST the request to the Supabase edge function, which emails it server-side.
+    @MainActor
+    private func sendInApp() async {
+        guard let url = URL(string: AppConfig.serviceRequestURL) else { sendViaMail(); return }
+        submitting = true
+        defer { submitting = false }
+
+        let payload: [String: String] = [
+            "name": name, "phone": phone, "email": email,
+            "address": address, "serviceType": serviceType, "message": details,
+            "secret": AppConfig.appFormSecret,
         ]
+        var req = URLRequest(url: url)
+        req.httpMethod = "POST"
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.setValue(AppConfig.supabaseAnonKey, forHTTPHeaderField: "apikey")
+        req.setValue("Bearer \(AppConfig.supabaseAnonKey)", forHTTPHeaderField: "Authorization")
+        req.httpBody = try? JSONSerialization.data(withJSONObject: payload)
+
+        do {
+            let (_, response) = try await URLSession.shared.data(for: req)
+            if let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) {
+                successMessage = "Thanks! Your request was sent to Big City Plumbing — we'll be in touch shortly."
+                clearForm()
+                showSuccess = true
+            } else {
+                alertMessage = "Sorry, we couldn't send your request. Please call \(AppConfig.phoneNumberDisplay)."
+            }
+        } catch {
+            alertMessage = "Network problem sending your request. Please call \(AppConfig.phoneNumberDisplay)."
+        }
+    }
+
+    private func clearForm() {
+        name = ""; phone = ""; email = ""; address = ""; details = ""
+        serviceType = SERVICE_TYPES.first!
+    }
+
+    /// Fallback: open the customer's mail app pre-filled (used until the
+    /// in-app endpoint is configured).
+    private func sendViaMail() {
+        let subject = "Service request: \(serviceType)"
+        var bodyLines: [String] = ["Name: \(name)", "Phone: \(phone)"]
         if !email.isEmpty { bodyLines.append("Email: \(email)") }
         bodyLines.append(contentsOf: [
-            "Address: \(address)",
-            "Service: \(serviceType)",
-            "",
-            "Details:",
-            details.isEmpty ? "(none)" : details,
+            "Address: \(address)", "Service: \(serviceType)", "",
+            "Details:", details.isEmpty ? "(none)" : details,
         ])
         let body = bodyLines.joined(separator: "\n")
 
@@ -142,6 +190,7 @@ struct ServiceRequestView: View {
 
         UIApplication.shared.open(url) { ok in
             if ok {
+                successMessage = "We've opened your email app. Send the message to finish your request."
                 showSuccess = true
             } else {
                 alertMessage = "No email app found. Please call \(AppConfig.phoneNumberDisplay)."

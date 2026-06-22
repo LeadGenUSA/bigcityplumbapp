@@ -20,6 +20,19 @@ enum AppConfig {
     static let phoneNumberDisplay = "(631) 361-9500"
     static let phoneNumberDial = "+16313619500"  // tel: format, no spaces
     static let email = "mike@bigcityplumbing.com"
+
+    // Service Request form posts to this Supabase edge function, which emails the
+    // submission to `email` server-side (no customer mail app needed). Fill in the
+    // anon key + secret once the function exists; until then the form falls back
+    // to opening the mail app.
+    static let serviceRequestURL = "https://wjaulyvqzywcnkegnzoh.supabase.co/functions/v1/send-app-service-request"
+    static let supabaseAnonKey = ""   // public anon key (eyJ…)
+    static let appFormSecret = ""     // must match APP_FORM_SECRET in the function
+
+    /// True once the in-app submit endpoint is fully configured.
+    static var serviceFormConfigured: Bool {
+        !supabaseAnonKey.isEmpty && !appFormSecret.isEmpty
+    }
     static let websiteURL = URL(string: "https://example.com")!
 
     // YouTube — the Videos tab shows this playlist (must be Public or Unlisted to embed).

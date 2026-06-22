@@ -31,6 +31,18 @@ object AppConfig {
     const val EMAIL = "mike@bigcityplumbing.com"
     const val WEBSITE_URL = "https://example.com"
 
+    // Service Request form posts to this Supabase edge function, which emails the
+    // submission to EMAIL server-side (no customer mail app needed). Fill in the
+    // anon key + secret once the function exists; until then the form falls back
+    // to opening the mail app.
+    const val SERVICE_REQUEST_URL = "https://wjaulyvqzywcnkegnzoh.supabase.co/functions/v1/send-app-service-request"
+    const val SUPABASE_ANON_KEY = ""   // public anon key (eyJ…)
+    const val APP_FORM_SECRET = ""     // must match APP_FORM_SECRET in the function
+
+    /** True once the in-app submit endpoint is fully configured. */
+    val serviceFormConfigured: Boolean
+        get() = SUPABASE_ANON_KEY.isNotEmpty() && APP_FORM_SECRET.isNotEmpty()
+
     // YouTube — the Videos tab shows this playlist (must be Public or Unlisted to embed).
     // Playlist ID is the part after "list=" in a youtube.com/playlist?list=... URL.
     const val YOUTUBE_PLAYLIST_ID = "PLCA5F1wp6EynBq4VyPhGawPTbUypB3uRF"
