@@ -76,7 +76,7 @@ private fun YouTubePlaylistView(playlistId: String, modifier: Modifier = Modifie
         <style>html,body{margin:0;padding:0;background:#000;height:100%}
         .wrap{position:fixed;inset:0}iframe{border:0;width:100%;height:100%}</style>
         </head><body><div class="wrap">
-        <iframe src="https://www.youtube.com/embed/videoseries?list=$playlistId&playsinline=1&rel=0"
+        <iframe src="https://www.youtube.com/embed/videoseries?list=$playlistId&playsinline=1&rel=0&origin=https://www.bigcityplumbing.com"
           allow="encrypted-media; picture-in-picture; web-share; fullscreen" allowfullscreen></iframe>
         </div></body></html>
         """.trimIndent()
@@ -95,7 +95,11 @@ private fun YouTubePlaylistView(playlistId: String, modifier: Modifier = Modifie
                 settings.mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
                 webViewClient = WebViewClient()
                 webChromeClient = WebChromeClient()
-                loadDataWithBaseURL("https://www.youtube.com", html, "text/html", "utf-8", null)
+                // baseURL must be a normal third-party origin (NOT youtube.com):
+                // an empty referrer triggers YouTube error 153, while embedding
+                // "on youtube.com" triggers "Video unavailable" 152. A real site
+                // origin makes it a valid third-party embed.
+                loadDataWithBaseURL("https://www.bigcityplumbing.com", html, "text/html", "utf-8", null)
             }
         },
     )

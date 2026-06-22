@@ -65,14 +65,18 @@ struct YouTubePlaylistWebView: UIViewRepresentable {
         <body>
           <div class="wrap">
             <iframe
-              src="https://www.youtube.com/embed/videoseries?list=\(playlistID)&playsinline=1&rel=0"
+              src="https://www.youtube.com/embed/videoseries?list=\(playlistID)&playsinline=1&rel=0&origin=https://www.bigcityplumbing.com"
               allow="encrypted-media; picture-in-picture; web-share; fullscreen"
               allowfullscreen></iframe>
           </div>
         </body>
         </html>
         """
-        webView.loadHTMLString(html, baseURL: URL(string: "https://www.youtube.com"))
+        // baseURL must be a normal third-party origin (NOT youtube.com): an empty
+        // referrer triggers YouTube error 153, while embedding "on youtube.com"
+        // triggers "Video unavailable" 152. A real site origin makes it a valid
+        // third-party embed.
+        webView.loadHTMLString(html, baseURL: URL(string: "https://www.bigcityplumbing.com"))
     }
 }
 
