@@ -183,29 +183,27 @@ struct VideoHubView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             case .loaded:
-                ScrollView {
-                    LazyVStack(spacing: 18) {
-                        ForEach(loader.videos) { video in
-                            NavigationLink(destination: VideoPlayerView(video: video)) {
-                                VideoCard(video: video)
-                            }
-                            .buttonStyle(.plain)
-                        }
+                List(loader.videos) { video in
+                    NavigationLink(destination: VideoPlayerView(video: video)) {
+                        VideoRow(video: video)
                     }
-                    .padding(16)
+                    .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 12))
                 }
+                .listStyle(.plain)
             }
         }
         .navigationTitle("Video Hub")
+        .navigationBarTitleDisplayMode(.inline)
         .onAppear { if loader.state != .loaded { loader.load() } }
     }
 }
 
-private struct VideoCard: View {
+/// Compact list row: a 16:9 thumbnail on the left, the title on the right.
+private struct VideoRow: View {
     let video: PlaylistVideo
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        HStack(spacing: 12) {
             ZStack {
                 Color(.secondarySystemBackground)
                 AsyncImage(url: video.thumbnailURL) { image in
@@ -214,21 +212,22 @@ private struct VideoCard: View {
                     ProgressView()
                 }
                 Image(systemName: "play.circle.fill")
-                    .font(.system(size: 46))
-                    .foregroundStyle(.white.opacity(0.92))
-                    .shadow(radius: 4)
+                    .font(.system(size: 28))
+                    .foregroundStyle(.white.opacity(0.95))
+                    .shadow(radius: 2)
             }
-            .aspectRatio(16.0 / 9.0, contentMode: .fill)
-            .frame(maxWidth: .infinity)
-            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .frame(width: 132, height: 74)   // 16:9
+            .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
 
             Text(video.title)
-                .font(.headline)
+                .font(.subheadline).fontWeight(.semibold)
                 .foregroundStyle(.primary)
-                .lineLimit(2)
+                .lineLimit(3)
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: .infinity, alignment: .leading)
+
+            Spacer(minLength: 0)
         }
+        .padding(.vertical, 2)
     }
 }
 

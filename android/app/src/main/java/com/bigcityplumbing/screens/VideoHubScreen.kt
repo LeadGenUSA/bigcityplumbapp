@@ -14,12 +14,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -125,7 +125,7 @@ fun VideoHubScreen() {
                 LoadState.LOADED ->
                     LazyColumn(
                         modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.spacedBy(18.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         items(videos) { video ->
                             VideoCard(video) { selected = video }
@@ -138,15 +138,17 @@ fun VideoHubScreen() {
 
 @Composable
 private fun VideoCard(video: PlaylistVideo, onClick: () -> Unit) {
-    Column(
+    // Compact list row: 16:9 thumbnail on the left, title on the right.
+    Row(
         modifier = Modifier.fillMaxWidth().clickable { onClick() },
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             modifier = Modifier
-                .fillMaxWidth()
-                .aspectRatio(16f / 9f)
-                .clip(RoundedCornerShape(14.dp))
+                .width(132.dp)
+                .height(74.dp)
+                .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
             contentAlignment = Alignment.Center,
         ) {
@@ -159,16 +161,17 @@ private fun VideoCard(video: PlaylistVideo, onClick: () -> Unit) {
             Icon(
                 Icons.Filled.PlayCircle,
                 contentDescription = null,
-                tint = Color.White.copy(alpha = 0.92f),
-                modifier = Modifier.size(52.dp),
+                tint = Color.White.copy(alpha = 0.95f),
+                modifier = Modifier.size(30.dp),
             )
         }
         Text(
             video.title,
-            style = MaterialTheme.typography.titleMedium,
+            style = MaterialTheme.typography.titleSmall,
             fontWeight = FontWeight.SemiBold,
-            maxLines = 2,
+            maxLines = 3,
             overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.weight(1f),
         )
     }
 }
