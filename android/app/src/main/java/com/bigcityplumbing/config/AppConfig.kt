@@ -39,7 +39,7 @@ object AppConfig {
     // newest first. Restrict it in Google Cloud Console to the YouTube Data API
     // and to this app's package. Leave empty to fall back to the public RSS feed
     // (most-recent ~15 videos only).
-    const val YOUTUBE_API_KEY = ""
+    const val YOUTUBE_API_KEY = "AIzaSyBZYg-fwX-8399KuJ338xZxEdu69jfqi6g"
 
     // Coupons shown on the Home tab. Edit/add/remove freely — the Home screen
     // adapts to however many are listed. Keep "discount" short so it fits the card.
