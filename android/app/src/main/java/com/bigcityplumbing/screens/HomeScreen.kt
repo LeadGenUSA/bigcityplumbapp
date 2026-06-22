@@ -46,6 +46,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import com.bigcityplumbing.R
 import com.bigcityplumbing.config.AppConfig
 import com.bigcityplumbing.config.Coupon
 import com.bigcityplumbing.ui.theme.BrandBlue
@@ -158,7 +163,17 @@ private fun HeaderHero() {
             )
             .padding(24.dp),
     ) {
-        Column {
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Image(
+                painter = painterResource(R.drawable.big_city_logo),
+                contentDescription = "Big City Plumbing logo",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(116.dp)
+                    .clip(CircleShape),
+            )
+            Spacer(Modifier.height(8.dp))
             Text(
                 AppConfig.COMPANY_NAME,
                 color = androidx.compose.ui.graphics.Color.White,
