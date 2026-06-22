@@ -3,8 +3,6 @@ import UIKit
 import WebKit
 
 struct VideoHubView: View {
-    @Environment(\.openURL) private var openURL
-
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Tips, walkthroughs and customer stories.")
@@ -16,18 +14,7 @@ struct VideoHubView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                 .padding(.horizontal)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-            Button {
-                openURL(AppConfig.youtubeChannelURL)
-            } label: {
-                Text("Open in YouTube").bold()
-                    .frame(maxWidth: .infinity, minHeight: 44)
-                    .foregroundStyle(.white)
-                    .background(Theme.brandBlue)
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-            }
-            .padding(.horizontal)
-            .padding(.bottom, 8)
+                .padding(.bottom, 8)
         }
         .padding(.top, 8)
         .navigationTitle("Video Hub")

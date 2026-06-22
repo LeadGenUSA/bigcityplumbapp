@@ -1,8 +1,6 @@
 package com.bigcityplumbing.screens
 
 import android.annotation.SuppressLint
-import android.content.Intent
-import android.net.Uri
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebSettings
@@ -13,23 +11,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.bigcityplumbing.config.AppConfig
-import com.bigcityplumbing.ui.theme.BrandBlue
 
 @Composable
 fun VideoHubScreen() {
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,15 +41,6 @@ fun VideoHubScreen() {
                 .fillMaxWidth()
                 .weight(1f),
         )
-
-        Button(
-            onClick = {
-                context.startActivity(
-                    Intent(Intent.ACTION_VIEW, Uri.parse(AppConfig.youtubeChannelUrl()))
-                )
-            },
-            colors = ButtonDefaults.buttonColors(containerColor = BrandBlue),
-        ) { Text("Open in YouTube") }
     }
 }
 
