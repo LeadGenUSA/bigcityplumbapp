@@ -59,7 +59,13 @@ final class PlaylistLoader: ObservableObject {
             if let token = pageToken {
                 comps.queryItems?.append(URLQueryItem(name: "pageToken", value: token))
             }
-            let (data, response) = try await URLSession.shared.data(from: comps.url!)
+            var request = URLRequest(url: comps.url!)
+            // An iOS-app-restricted API key requires this header (the app's own
+            // bundle id) since we call the REST endpoint directly, not via a SDK.
+            if let bundleID = Bundle.main.bundleIdentifier {
+                request.setValue(bundleID, forHTTPHeaderField: "X-Ios-Bundle-Identifier")
+            }
+            let (data, response) = try await URLSession.shared.data(for: request)
             if let http = response as? HTTPURLResponse, !(200...299).contains(http.statusCode) {
                 throw URLError(.badServerResponse)
             }

@@ -30,7 +30,7 @@ enum AppConfig {
     // newest first. Restrict it in Google Cloud Console to the YouTube Data API
     // and to this app's bundle ID. Leave empty to fall back to the public RSS
     // feed (most-recent ~15 videos only).
-    static let youtubeApiKey = ""
+    static let youtubeApiKey = "AIzaSyBMqrBa4YERIUmtBh6bKEib6FqHUJf-4u4"
 
     /// Coupons shown on the Home tab. Edit/add/remove freely — the Home screen adapts.
     static let offers: [Coupon] = [
