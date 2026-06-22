@@ -78,6 +78,9 @@ dependencies {
     // Image loading for video thumbnails
     implementation("io.coil-kt:coil-compose:2.6.0")
 
+    // Splash screen (logo on launch; backported to older Android versions)
+    implementation("androidx.core:core-splashscreen:1.0.1")
+
     // JSON parsing — using org.json (built into Android) to avoid extra plugin
 
     // Test

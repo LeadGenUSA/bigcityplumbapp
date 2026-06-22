@@ -5,4 +5,11 @@
         <item name="android:statusBarColor">@color/brand_blue</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <!-- Launch splash: brand-blue background with the centered logo. -->
+    <style name="Theme.BigCityPlumbing.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/brand_blue</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_logo</item>
+        <item name="postSplashScreenTheme">@style/Theme.BigCityPlumbing</item>
+    </style>
 </resources>
