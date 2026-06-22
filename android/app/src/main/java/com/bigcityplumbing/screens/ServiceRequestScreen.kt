@@ -134,7 +134,7 @@ fun ServiceRequestScreen() {
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email (optional)") },
+            label = { Text("Email") },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(),
@@ -191,6 +191,8 @@ fun ServiceRequestScreen() {
                 when {
                     name.isBlank() -> error = "Please enter your name."
                     phone.isBlank() -> error = "Please enter a phone number we can reach you at."
+                    email.isBlank() -> error = "Please enter your email address."
+                    !email.contains("@") || !email.contains(".") -> error = "Please enter a valid email address."
                     address.isBlank() -> error = "Please enter the service address."
                     AppConfig.serviceFormConfigured -> {
                         submitting = true

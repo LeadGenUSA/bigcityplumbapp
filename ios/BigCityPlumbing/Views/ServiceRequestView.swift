@@ -53,7 +53,7 @@ struct ServiceRequestView: View {
                 TextField("Phone", text: $phone)
                     .keyboardType(.phonePad)
                     .textContentType(.telephoneNumber)
-                TextField("Email (optional)", text: $email)
+                TextField("Email", text: $email)
                     .keyboardType(.emailAddress)
                     .textContentType(.emailAddress)
                     .textInputAutocapitalization(.never)
@@ -116,6 +116,12 @@ struct ServiceRequestView: View {
         }
         if phone.isEmpty {
             alertMessage = "Please enter a phone number we can reach you at."; return
+        }
+        if email.isEmpty {
+            alertMessage = "Please enter your email address."; return
+        }
+        if !email.contains("@") || !email.contains(".") {
+            alertMessage = "Please enter a valid email address."; return
         }
         if address.isEmpty {
             alertMessage = "Please enter the service address."; return
