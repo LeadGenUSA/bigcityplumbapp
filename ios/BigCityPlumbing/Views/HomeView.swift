@@ -30,6 +30,13 @@ struct HomeView: View {
 
     private var hero: some View {
         VStack(alignment: .leading, spacing: 6) {
+            Image("BigCityLogo")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 116, height: 116)
+                .clipShape(Circle())
+                .frame(maxWidth: .infinity, alignment: .center)
+                .padding(.bottom, 6)
             Text(AppConfig.companyName)
                 .font(.largeTitle.bold())
                 .foregroundStyle(.white)
